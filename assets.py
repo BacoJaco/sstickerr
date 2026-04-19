@@ -6,7 +6,9 @@ stickers = {}
 def load_all_images():    
     image_paths = {
         "peace": "./GFProvidedHamsters/Peace.png",
-        "heart": "./GFProvidedHamsters/Heart.png"
+        "heart": "./GFProvidedHamsters/Heart.png",
+        "gun": "./GFProvidedHamsters/Gun.png",
+        "beg": "./GFProvidedHamsters/Beg.png"
     }
 
     for name, path in image_paths.items():
@@ -15,7 +17,7 @@ def load_all_images():
             img = cv2.imread(path, cv2.IMREAD_UNCHANGED)
             
             if img is not None:
-                # Resize them uniforml
+                # Resize them uniformly
                 stickers[name] = cv2.resize(img, (150, 150))
             else:
                 print(f"Error: OpenCV could not read {path}.")

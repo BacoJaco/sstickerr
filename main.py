@@ -116,4 +116,3 @@ with vision.HandLandmarker.create_from_options(hand_options) as hand_landmarker,
 
 cap.release()
 cv2.destroyAllWindows()
-
