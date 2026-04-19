@@ -27,6 +27,23 @@ def is_gun(hand_landmarks):
     
     return index_up and middle_down and ring_down and pinky_down and thumb_up
 
+def is_chef(hand_landmarks):    
+    # Check if the main fingers are pointing down
+    index_down = hand_landmarks[8].y > hand_landmarks[6].y
+    middle_down = hand_landmarks[12].y > hand_landmarks[10].y
+    ring_down = hand_landmarks[16].y > hand_landmarks[14].y
+    
+    # Check if the hand itself is angled downward 
+    hand_pointing_down = hand_landmarks[8].y > hand_landmarks[0].y
+    
+    # Check for the pinch
+    dist_thumb_index = calculate_distance(hand_landmarks[4], hand_landmarks[8])
+    dist_thumb_middle = calculate_distance(hand_landmarks[4], hand_landmarks[12])
+        
+    pinched = (dist_thumb_index < 0.08) and (dist_thumb_middle < 0.08)
+    
+    return index_down and middle_down and ring_down and hand_pointing_down and pinched
+
 # Calculate the Euclidean distance between two landmarks
 def calculate_distance(lm1, lm2):
     return math.sqrt((lm1.x - lm2.x)**2 + (lm1.y - lm2.y)**2)
@@ -88,5 +105,8 @@ def detect_gesture(hand_landmarks):
 
         if is_gun(hand):
             return "gun"
+        
+        if is_chef(hand):
+            return "chef"
 
     return None

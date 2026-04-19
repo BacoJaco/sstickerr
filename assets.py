@@ -8,7 +8,8 @@ def load_all_images():
         "peace": "./GFProvidedHamsters/Peace.png",
         "heart": "./GFProvidedHamsters/Heart.png",
         "gun": "./GFProvidedHamsters/Gun.png",
-        "beg": "./GFProvidedHamsters/Beg.png"
+        "beg": "./GFProvidedHamsters/Beg.png",
+        "chef": "./GFProvidedHamsters/Chef.png"
     }
 
     for name, path in image_paths.items():
