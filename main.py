@@ -84,11 +84,11 @@ with vision.HandLandmarker.create_from_options(hand_options) as hand_landmarker,
                 )
                 
                 # Compare detected gesture with the keys in the graphics dictionary
-                if gestures.detect_gesture(hand_landmarks) and gestures.detect_gesture(hand_landmarks) in assets.stickers:
+                if gestures.detect_gesture(hand_result.hand_landmarks) and gestures.detect_gesture(hand_result.hand_landmarks) in assets.stickers:
                     # Draw the corresponding image
                     frame = assets.overlay_transparent(
                         background=frame, 
-                        overlay=assets.stickers[gestures.detect_gesture(hand_landmarks)], 
+                        overlay=assets.stickers[gestures.detect_gesture(hand_result.hand_landmarks)], 
                         x=50, 
                         y=70
                     )

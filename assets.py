@@ -6,6 +6,7 @@ stickers = {}
 def load_all_images():    
     image_paths = {
         "peace": "./GFProvidedHamsters/Peace.png",
+        "heart": "./GFProvidedHamsters/Heart.png"
     }
 
     for name, path in image_paths.items():
