@@ -10,3 +10,11 @@ def is_peace_sign(hand_landmarks):
     pinky_down = hand_landmarks[20].y > hand_landmarks[18].y
 
     return index_up and middle_up and ring_down and pinky_down
+
+
+# Returns the name of the detected gesture
+def detect_gesture(hand_landmarks):
+    if is_peace_sign(hand_landmarks):
+        return "peace"
+    
+    return None

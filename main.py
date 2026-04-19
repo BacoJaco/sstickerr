@@ -9,7 +9,7 @@ from mediapipe.tasks.python.vision import drawing_utils
 from mediapipe.tasks.python.vision import HandLandmarksConnections
 from mediapipe.tasks.python.vision import FaceLandmarksConnections
 
-import handgestures
+import gestures
 import assets
 
 # Load stickers
@@ -82,16 +82,16 @@ with vision.HandLandmarker.create_from_options(hand_options) as hand_landmarker,
                     landmark_drawing_spec=purple_dots,
                     connection_drawing_spec=purple_lines_thick
                 )
-
                 
-                if handgestures.is_peace_sign(hand_landmarks):
-                    if "peace" in assets.stickers:
-                            frame = assets.overlay_transparent(
-                                background=frame, 
-                                overlay=assets.stickers["peace"], 
-                                x=50, 
-                                y=70
-                            )
+                # Compare detected gesture with the keys in the graphics dictionary
+                if gestures.detect_gesture(hand_landmarks) and gestures.detect_gesture(hand_landmarks) in assets.stickers:
+                    # Draw the corresponding image
+                    frame = assets.overlay_transparent(
+                        background=frame, 
+                        overlay=assets.stickers[gestures.detect_gesture(hand_landmarks)], 
+                        x=50, 
+                        y=70
+                    )
 
         if face_result.face_landmarks:
             for face_landmarks in face_result.face_landmarks:
