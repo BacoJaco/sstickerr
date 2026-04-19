@@ -9,13 +9,20 @@ from mediapipe.tasks.python.vision import drawing_utils
 from mediapipe.tasks.python.vision import HandLandmarksConnections
 from mediapipe.tasks.python.vision import FaceLandmarksConnections
 
+import gestures
+import assets
+
+# Load stickers
+assets.load_all_images()
+
+# Import Google models
 hand_model_path = 'hand_landmarker.task'
 face_model_path = 'face_landmarker.task'
 
 hand_options = vision.HandLandmarkerOptions(
     base_options=python.BaseOptions(model_asset_path=hand_model_path),
     num_hands=2,
-    running_mode=RunningMode.VIDEO
+    running_mode=RunningMode.VIDEO # Best for webcams
 )
 
 face_options = vision.FaceLandmarkerOptions(
@@ -24,6 +31,7 @@ face_options = vision.FaceLandmarkerOptions(
     running_mode=RunningMode.VIDEO
 )
 
+# Set drawing specifications for a monochromatic theme
 PURPLE = (255, 0, 255)
 
 purple_dots = drawing_utils.DrawingSpec(color=PURPLE, thickness=-1, circle_radius=3)
@@ -42,6 +50,14 @@ print("Press 'q' to quit.")
 
 with vision.HandLandmarker.create_from_options(hand_options) as hand_landmarker, \
      vision.FaceLandmarker.create_from_options(face_options) as face_landmarker:
+
+    peaceGraphic = cv2.imread('./GFProvidedHamsters/Peace.png', cv2.IMREAD_UNCHANGED)
+
+    # Resize to fit
+    if peaceGraphic is not None:
+        peaceGraphic = cv2.resize(peaceGraphic, (150, 150))
+    else:
+        print("Warning: Could not load the image file!")
 
     while cap.isOpened():
         success, frame = cap.read()
@@ -66,6 +82,16 @@ with vision.HandLandmarker.create_from_options(hand_options) as hand_landmarker,
                     landmark_drawing_spec=purple_dots,
                     connection_drawing_spec=purple_lines_thick
                 )
+                
+                # Compare detected gesture with the keys in the graphics dictionary
+                if gestures.detect_gesture(hand_result.hand_landmarks) and gestures.detect_gesture(hand_result.hand_landmarks) in assets.stickers:
+                    # Draw the corresponding image
+                    frame = assets.overlay_transparent(
+                        background=frame, 
+                        overlay=assets.stickers[gestures.detect_gesture(hand_result.hand_landmarks)], 
+                        x=50, 
+                        y=70
+                    )
 
         if face_result.face_landmarks:
             for face_landmarks in face_result.face_landmarks:
