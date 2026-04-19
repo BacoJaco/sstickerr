@@ -10,6 +10,10 @@ from mediapipe.tasks.python.vision import HandLandmarksConnections
 from mediapipe.tasks.python.vision import FaceLandmarksConnections
 
 import handgestures
+import assets
+
+# Load stickers
+assets.load_all_images()
 
 # Import Google models
 hand_model_path = 'hand_landmarker.task'
@@ -47,6 +51,14 @@ print("Press 'q' to quit.")
 with vision.HandLandmarker.create_from_options(hand_options) as hand_landmarker, \
      vision.FaceLandmarker.create_from_options(face_options) as face_landmarker:
 
+    peaceGraphic = cv2.imread('./GFProvidedHamsters/Peace.png', cv2.IMREAD_UNCHANGED)
+
+    # Resize to fit
+    if peaceGraphic is not None:
+        peaceGraphic = cv2.resize(peaceGraphic, (150, 150))
+    else:
+        print("Warning: Could not load the image file!")
+
     while cap.isOpened():
         success, frame = cap.read()
         if not success:
@@ -71,9 +83,15 @@ with vision.HandLandmarker.create_from_options(hand_options) as hand_landmarker,
                     connection_drawing_spec=purple_lines_thick
                 )
 
+                
                 if handgestures.is_peace_sign(hand_landmarks):
-                    cv2.putText(frame, "Peace Sign Detected!", (50, 50), 
-                                cv2.FONT_HERSHEY_SIMPLEX, 1, PURPLE, 2, cv2.LINE_AA)
+                    if "peace" in assets.stickers:
+                            frame = assets.overlay_transparent(
+                                background=frame, 
+                                overlay=assets.stickers["peace"], 
+                                x=50, 
+                                y=70
+                            )
 
         if face_result.face_landmarks:
             for face_landmarks in face_result.face_landmarks:
