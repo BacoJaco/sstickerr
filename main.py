@@ -9,13 +9,16 @@ from mediapipe.tasks.python.vision import drawing_utils
 from mediapipe.tasks.python.vision import HandLandmarksConnections
 from mediapipe.tasks.python.vision import FaceLandmarksConnections
 
+import handgestures
+
+# Import Google models
 hand_model_path = 'hand_landmarker.task'
 face_model_path = 'face_landmarker.task'
 
 hand_options = vision.HandLandmarkerOptions(
     base_options=python.BaseOptions(model_asset_path=hand_model_path),
     num_hands=2,
-    running_mode=RunningMode.VIDEO
+    running_mode=RunningMode.VIDEO # Best for webcams
 )
 
 face_options = vision.FaceLandmarkerOptions(
@@ -24,6 +27,7 @@ face_options = vision.FaceLandmarkerOptions(
     running_mode=RunningMode.VIDEO
 )
 
+# Set drawing specifications for a monochromatic theme
 PURPLE = (255, 0, 255)
 
 purple_dots = drawing_utils.DrawingSpec(color=PURPLE, thickness=-1, circle_radius=3)
@@ -67,6 +71,10 @@ with vision.HandLandmarker.create_from_options(hand_options) as hand_landmarker,
                     connection_drawing_spec=purple_lines_thick
                 )
 
+                if handgestures.is_peace_sign(hand_landmarks):
+                    cv2.putText(frame, "Peace Sign Detected!", (50, 50), 
+                                cv2.FONT_HERSHEY_SIMPLEX, 1, PURPLE, 2, cv2.LINE_AA)
+
         if face_result.face_landmarks:
             for face_landmarks in face_result.face_landmarks:
                 
@@ -90,3 +98,4 @@ with vision.HandLandmarker.create_from_options(hand_options) as hand_landmarker,
 
 cap.release()
 cv2.destroyAllWindows()
+
